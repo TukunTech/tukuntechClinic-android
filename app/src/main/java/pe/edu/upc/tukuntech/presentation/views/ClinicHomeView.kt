@@ -48,7 +48,10 @@ fun ClinicHomeView(navController: NavController) {
                 verticalAlignment = Alignment.Top
             ) {
                 Button(
-                    onClick = { /* TODO: Logout */ },
+                    onClick = {
+                        navController.navigate("login")
+
+                    },
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray)
                 ) {
