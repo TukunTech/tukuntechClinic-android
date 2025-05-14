@@ -27,10 +27,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pe.edu.upc.tukuntech.R
 import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.tooling.preview.Preview
 import pe.edu.upc.tukuntech.domain.models.Patient
 import pe.edu.upc.tukuntech.presentation.sampledata.samplePatients
 
-
+@Preview
 @Composable
 fun PostOperativeView() {
     Column(
