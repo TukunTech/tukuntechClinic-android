@@ -15,7 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -206,17 +206,19 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
 
            Text("I forgot my password")
 
-          Divider(
-              color = Color.Black,
-              thickness = 1.dp,
-              modifier = Modifier.padding(vertical = 8.dp)
-          )
+           HorizontalDivider(
+               color = Color.Black,
+               thickness = 1.dp,
+               modifier = Modifier.padding(vertical = 8.dp)
+           )
 
            Text("Don't have an account?")
 
            Spacer(modifier = Modifier.height(16.dp))
            Button(
-               onClick = { /* otra acción */ },
+               onClick = {
+                   navController.navigate("create_account")
+               },
                modifier = Modifier.fillMaxWidth(),
                colors = ButtonDefaults.buttonColors(
                    containerColor = Color(0xFF0FA596)
