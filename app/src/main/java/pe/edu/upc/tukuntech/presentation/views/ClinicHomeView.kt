@@ -49,8 +49,7 @@ fun ClinicHomeView(navController: NavController) {
             ) {
                 Button(
                     onClick = {
-                        navController.navigate("login")
-
+                        navController.popBackStack()
                     },
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray)
