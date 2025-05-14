@@ -139,7 +139,7 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                modifier = Modifier
                    .clip(RoundedCornerShape(50))
                    .background(Color(0xFFE0F7F9))
-                   .padding(4.dp)
+                   .padding(2.dp)
                    .fillMaxWidth(),
                horizontalArrangement = Arrangement.SpaceBetween
            ) {
