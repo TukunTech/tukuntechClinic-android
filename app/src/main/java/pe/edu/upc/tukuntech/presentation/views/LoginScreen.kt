@@ -1,4 +1,4 @@
-package pe.edu.upc.tukuntech.presentation.navigation
+package pe.edu.upc.tukuntech.presentation.views
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,8 +19,6 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SegmentedButtonColors
-import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -31,14 +29,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+
+
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import pe.edu.upc.tukuntech.R
 
-@Preview
+
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier) {
+fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
 
     val email = remember{
         mutableStateOf("")
@@ -133,7 +133,7 @@ fun LoginScreen(modifier: Modifier = Modifier) {
 
            }
 
-           val selectedOption = remember { mutableStateOf("Clínicas") }
+           val selectedOption = remember { mutableStateOf("Clinic") }
 
            Row(
                modifier = Modifier
@@ -143,7 +143,7 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                    .fillMaxWidth(),
                horizontalArrangement = Arrangement.SpaceBetween
            ) {
-               listOf("Clínicas", "Adulto Mayor").forEach { option ->
+               listOf("Clinic", "Elder").forEach { option ->
                    val isSelected = selectedOption.value == option
 
                    Button(
@@ -190,7 +190,9 @@ fun LoginScreen(modifier: Modifier = Modifier) {
            Button(
                modifier = Modifier
                    .size(150.dp, 40.dp),
-               onClick = { /* login */ },
+               onClick = {
+                   navController.navigate("home")
+               },
                colors = ButtonDefaults.buttonColors(
                  containerColor = Color(0xFF0c95a2)
                )
@@ -210,7 +212,7 @@ fun LoginScreen(modifier: Modifier = Modifier) {
               modifier = Modifier.padding(vertical = 8.dp)
           )
 
-           Text("Dont' have an account?")
+           Text("Don't have an account?")
 
            Spacer(modifier = Modifier.height(16.dp))
            Button(
@@ -223,6 +225,7 @@ fun LoginScreen(modifier: Modifier = Modifier) {
            ) {
                Text("Create an account")
            }
+
        }
 
    }
