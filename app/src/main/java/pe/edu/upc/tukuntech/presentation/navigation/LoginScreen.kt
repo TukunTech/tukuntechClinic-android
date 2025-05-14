@@ -19,6 +19,8 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SegmentedButtonColors
+import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -116,6 +118,7 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                    )
 
                }
+
                IconButton(
                    onClick = {}
                ) {
@@ -128,6 +131,36 @@ fun LoginScreen(modifier: Modifier = Modifier) {
 
                }
 
+           }
+
+           val selectedOption = remember { mutableStateOf("Clínicas") }
+
+           Row(
+               modifier = Modifier
+                   .clip(RoundedCornerShape(50))
+                   .background(Color(0xFFE0F7F9))
+                   .padding(4.dp)
+                   .fillMaxWidth(),
+               horizontalArrangement = Arrangement.SpaceBetween
+           ) {
+               listOf("Clínicas", "Adulto Mayor").forEach { option ->
+                   val isSelected = selectedOption.value == option
+
+                   Button(
+                       onClick = { selectedOption.value = option },
+                       shape = RoundedCornerShape(50),
+                       modifier = Modifier
+                           .weight(1f)
+                           .height(40.dp),
+                       colors = ButtonDefaults.buttonColors(
+                           containerColor = if (isSelected) Color(0xFF5BB9BA) else Color.Transparent,
+                           contentColor = if (isSelected) Color.White else Color(0xFF5BB9BA)
+                       ),
+                       elevation = null
+                   ) {
+                       Text(text = option)
+                   }
+               }
            }
 
            OutlinedTextField(
@@ -153,7 +186,6 @@ fun LoginScreen(modifier: Modifier = Modifier) {
            )
 
            Spacer(modifier = Modifier.height(24.dp))
-
 
            Button(
                modifier = Modifier
@@ -196,3 +228,4 @@ fun LoginScreen(modifier: Modifier = Modifier) {
    }
 
 }
+
