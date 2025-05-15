@@ -26,6 +26,7 @@ import pe.edu.upc.tukuntech.presentation.views.ClinicHomeView
 import pe.edu.upc.tukuntech.presentation.views.ICUView
 import pe.edu.upc.tukuntech.presentation.views.PatientRegistrationView
 import pe.edu.upc.tukuntech.presentation.views.LoginScreen
+import pe.edu.upc.tukuntech.presentation.views.PatientListView
 import pe.edu.upc.tukuntech.presentation.views.PostOperativeView
 @Preview
 
@@ -105,13 +106,19 @@ fun Home() {
                 ICUView()
 
             }
+
             composable("patients") {
-                PatientRegistrationView() //TODO: Implementar vista de pacientes, por el momento redirecciona a reguistro de pacientes
+                PatientListView(navController)
 
             }
             composable("login") {
                 LoginScreen(navController)
             }
+
+            composable("patientRegistration") {
+                PatientRegistrationView(navController)
+            }
+
 
 
         }
