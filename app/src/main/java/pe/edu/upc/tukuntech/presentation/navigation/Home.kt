@@ -16,12 +16,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import pe.edu.upc.tukuntech.presentation.views.ClinicHomeView
 import pe.edu.upc.tukuntech.presentation.views.ICUView
+import pe.edu.upc.tukuntech.presentation.views.PatientRegistrationView
 import pe.edu.upc.tukuntech.presentation.views.PostOperativeView
+@Preview
 
 @Composable
 fun Home() {
@@ -94,6 +97,7 @@ fun Home() {
 
             }
             composable("patients") {
+                PatientRegistrationView() //TODO: Implementar vista de pacientes, por el momento redirecciona a reguistro de pacientes
 
             }
         }
