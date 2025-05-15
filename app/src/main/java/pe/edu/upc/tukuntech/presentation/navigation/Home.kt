@@ -24,8 +24,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import pe.edu.upc.tukuntech.presentation.views.ClinicHomeView
 import pe.edu.upc.tukuntech.presentation.views.ICUView
+import pe.edu.upc.tukuntech.presentation.views.PatientRegistrationView
 import pe.edu.upc.tukuntech.presentation.views.LoginScreen
 import pe.edu.upc.tukuntech.presentation.views.PostOperativeView
+@Preview
 
 
 @Preview
@@ -104,6 +106,7 @@ fun Home() {
 
             }
             composable("patients") {
+                PatientRegistrationView() //TODO: Implementar vista de pacientes, por el momento redirecciona a reguistro de pacientes
 
             }
             composable("login") {
