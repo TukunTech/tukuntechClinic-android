@@ -81,7 +81,7 @@ fun ClinicHomeView(navController: NavController) {
 
                 ClinicPostOperativeButton("Postoperative Patients", navController)
                 ClinicICUButton("ICU Patients", navController)
-                //ClinicHomeButton("Patients")
+                ClinicPatientButton("Patients", navController)
             }
         }
     }
@@ -113,6 +113,26 @@ fun ClinicICUButton(text: String, navController: NavController) {
     Button(
         onClick = {
             navController.navigate("uci")
+        },
+        shape = RoundedCornerShape(8.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00ACC1)),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp)
+            .height(48.dp)
+    ) {
+        Text(
+            text = text,
+            fontSize = 18.sp
+        )
+    }
+}
+
+@Composable
+fun ClinicPatientButton(text: String, navController: NavController) {
+    Button(
+        onClick = {
+            navController.navigate("patients")
         },
         shape = RoundedCornerShape(8.dp),
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00ACC1)),
