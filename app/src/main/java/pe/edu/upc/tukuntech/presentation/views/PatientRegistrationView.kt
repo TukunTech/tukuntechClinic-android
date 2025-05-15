@@ -36,13 +36,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import pe.edu.upc.tukuntech.R
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PatientRegistrationView() {
+fun PatientRegistrationView(navController: NavController) {
     val scrollState = rememberScrollState()
     val inputBackground = Color(0xFFD8E8EA)
 
@@ -132,7 +135,10 @@ fun PatientRegistrationView() {
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { /* TODO: Redireccionar a lista pacientes */ },
+            onClick = {
+                // Aquí navegas de regreso a la pantalla anterior (lista pacientes)
+                navController.popBackStack()
+            },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(50),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00BCD4))
@@ -141,7 +147,6 @@ fun PatientRegistrationView() {
         }
     }
 }
-
 @Composable
 fun CustomInputField(
     label: String,
