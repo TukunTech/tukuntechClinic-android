@@ -12,6 +12,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -19,13 +20,17 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import pe.edu.upc.tukuntech.presentation.views.ClinicHomeView
 import pe.edu.upc.tukuntech.presentation.views.ICUView
 import pe.edu.upc.tukuntech.presentation.views.PatientRegistrationView
+import pe.edu.upc.tukuntech.presentation.views.LoginScreen
 import pe.edu.upc.tukuntech.presentation.views.PostOperativeView
 @Preview
 
+
+@Preview
 @Composable
 fun Home() {
 
@@ -58,8 +63,12 @@ fun Home() {
         mutableStateOf(0)
     }
 
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
     Scaffold(
         bottomBar = {
+            if (currentRoute != "login")
             BottomAppBar {
                 navigationItems.forEachIndexed { index, item ->
                     NavigationBarItem(
@@ -81,7 +90,7 @@ fun Home() {
     ) { padding ->
         NavHost(
             navController,
-            startDestination = "home",
+            startDestination = "login",
             modifier = Modifier.padding(padding)
         ) {
             composable("home") {
@@ -100,6 +109,11 @@ fun Home() {
                 PatientRegistrationView() //TODO: Implementar vista de pacientes, por el momento redirecciona a reguistro de pacientes
 
             }
+            composable("login") {
+                LoginScreen(navController)
+            }
+
+
         }
     }
 }
