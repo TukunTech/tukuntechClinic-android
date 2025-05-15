@@ -23,6 +23,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import pe.edu.upc.tukuntech.presentation.views.ClinicHomeView
+import pe.edu.upc.tukuntech.presentation.views.CreateAccountScreen
 import pe.edu.upc.tukuntech.presentation.views.ICUView
 import pe.edu.upc.tukuntech.presentation.views.PatientRegistrationView
 import pe.edu.upc.tukuntech.presentation.views.LoginScreen
@@ -69,7 +70,7 @@ fun Home() {
 
     Scaffold(
         bottomBar = {
-            if (currentRoute != "login")
+            if (currentRoute != "login" && currentRoute != "create_account")
             BottomAppBar {
                 navigationItems.forEachIndexed { index, item ->
                     NavigationBarItem(
@@ -113,6 +114,9 @@ fun Home() {
             }
             composable("login") {
                 LoginScreen(navController)
+            }
+            composable("create_account"){
+                CreateAccountScreen(navController)
             }
 
             composable("patientRegistration") {
