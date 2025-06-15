@@ -31,7 +31,7 @@ fun ClinicHomeView(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF1C1C1C)) // fondo exterior negro
+            .background(Color(0xFF1C1C1C))
     ) {
         Column(
             modifier = Modifier
@@ -40,7 +40,6 @@ fun ClinicHomeView(navController: NavController) {
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Fila superior: botón logout (izquierda) y logo (derecha)
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -60,13 +59,12 @@ fun ClinicHomeView(navController: NavController) {
                 Image(
                     painter = painterResource(id = R.drawable.tukuntech),
                     contentDescription = "TukunTech logo",
-                    modifier = Modifier.size(64.dp) // Logo más grande
+                    modifier = Modifier.size(64.dp)
                 )
             }
 
             Spacer(modifier = Modifier.height(40.dp))
 
-            // Centro del contenido: título y botones
             Column(
                 modifier = Modifier
                     .fillMaxSize(),
@@ -82,7 +80,7 @@ fun ClinicHomeView(navController: NavController) {
                 Spacer(modifier = Modifier.height(24.dp))
 
                 ClinicPostOperativeButton("Postoperative Patients", navController)
-                ClinicICUButton("ICU Patients", navController)
+                ClinicICUButton("Critical Patients", navController)
                 ClinicPatientButton("Patients", navController)
             }
         }
