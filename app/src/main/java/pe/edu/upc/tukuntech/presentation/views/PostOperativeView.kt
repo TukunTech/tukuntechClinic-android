@@ -27,20 +27,34 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import pe.edu.upc.tukuntech.R
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.IconButton
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import pe.edu.upc.tukuntech.domain.models.Patient
+import pe.edu.upc.tukuntech.domain.models.Patients
 import pe.edu.upc.tukuntech.presentation.sampledata.samplePatients
+import pe.edu.upc.tukuntech.presentation.viewmodels.GetBedsViewModel
+import androidx.compose.material3.Icon
 
-@Preview
+
 @Composable
-fun PostOperativeView() {
+fun PostOperativeView(viewModel: GetBedsViewModel) {
+    val beds = viewModel.beds.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
             .padding(16.dp)
     ) {
-        // Header con logo y título
+        // Header
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -60,11 +74,16 @@ fun PostOperativeView() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Lista de pacientes
         LazyColumn {
-            items(samplePatients) { patient ->
-                PatientCard(patient)
-                Spacer(modifier = Modifier.height(12.dp))
+            items(beds.value) { item ->
+                PatientCard(item){ isCritical ->
+                    if (isCritical){
+                        viewModel.insertPatientCritic(item)
+                    } else {
+                        viewModel.deletePatientCritic(item)
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
 
@@ -73,12 +92,19 @@ fun PostOperativeView() {
 }
 
 
+
 @Composable
-fun PatientCard(patient: Patient) {
+fun PatientCard(
+    patient: Patients,
+    onCriticalStatusChange: (Boolean) -> Unit ={}
+    ) {
+    val isCritical = remember {
+        mutableStateOf(patient.isCritic)
+    }
+
     Card(
         shape = RoundedCornerShape(16.dp),
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
@@ -87,21 +113,50 @@ fun PatientCard(patient: Patient) {
                 .background(Color(0xFFEFEFEF))
                 .padding(16.dp)
         ) {
-            Text(
-                text = patient.bed,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Bed ${patient.id} - ${patient.name} ${patient.lastName}",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                IconButton(
+                    onClick = {
+                        isCritical.value = !isCritical.value
+                        patient.isCritic = isCritical.value
+                        onCriticalStatusChange(isCritical.value)
+                    },
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .background(Color.White)
+                        .size(36.dp)
+                ) {
+                    Icon(
+                        if (isCritical.value){
+                            Icons.Default.Warning
+                        } else{
+                            Icons.Default.Warning
+                        },
+                        contentDescription = "Mark Critical",
+                        tint = if (isCritical.value) Color.Red else Color.Gray
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            VitalSign(label = "HR", value = "${patient.hr}", unit = "bpm", color = Color.Red)
-            VitalSign(label = "NIPB", value = patient.nibp, unit = "mmHg", color = Color(0xFF2E7D32))
-            VitalSign(label = "SpO2", value = "${patient.spo2}", unit = "%", color = Color(0xFF6A1B9A))
-            VitalSign(label = "Temp", value = "${patient.temp}", unit = "°C", color = Color.Gray)
+            VitalSign(label = "HR", value = patient.hr, unit = "bpm", color = Color.Red)
+            VitalSign(label = "NIPB", value = patient.nipb, unit = "mmHg", color = Color(0xFF2E7D32))
+            VitalSign(label = "SpO2", value = patient.spo02, unit = "%", color = Color(0xFF6A1B9A))
+            VitalSign(label = "Temp", value = patient.temp, unit = "°C", color = Color.Gray)
         }
     }
 }
+
+
 
 @Composable
 fun VitalSign(label: String, value: String, unit: String, color: Color) {
