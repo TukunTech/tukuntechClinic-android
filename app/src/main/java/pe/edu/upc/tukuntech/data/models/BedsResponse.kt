@@ -1,6 +1,6 @@
 package pe.edu.upc.tukuntech.data.models
 
-import pe.edu.upc.tukuntech.domain.models.Patients
+import pe.edu.upc.tukuntech.domain.models.Beds
 
 data class BedsResponse(
     val id: Int?,
@@ -15,8 +15,8 @@ data class BedsResponse(
     val allergy: AllergyResponse?
 
 ){
-    fun toBeds() : Patients{
-        return Patients(
+    fun toBeds() : Beds{
+        return Beds(
             id = id?: 0,
             name = patient?.name ?: "",
             lastName = patient?.lastName ?: "",

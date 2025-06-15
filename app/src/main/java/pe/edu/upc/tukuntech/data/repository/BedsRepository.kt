@@ -5,10 +5,10 @@ import kotlinx.coroutines.withContext
 import pe.edu.upc.tukuntech.data.local.PatientCriticDao
 import pe.edu.upc.tukuntech.data.models.PatientsCriticEntity
 import pe.edu.upc.tukuntech.data.remote.BedsService
-import pe.edu.upc.tukuntech.domain.models.Patients
+import pe.edu.upc.tukuntech.domain.models.Beds
 
 class BedsRepository(private val bedsService: BedsService, private val patientCriticDao: PatientCriticDao) {
-    suspend fun getBeds(): List<Patients> =
+    suspend fun getBeds(): List<Beds> =
         withContext(Dispatchers.IO) {
             val response = bedsService.getBeds()
             if (response.isSuccessful) {
@@ -23,7 +23,7 @@ class BedsRepository(private val bedsService: BedsService, private val patientCr
             }
             return@withContext emptyList()
         }
-    suspend fun insertPatientCritic(patient: Patients) = withContext(Dispatchers.IO) {
+    suspend fun insertPatientCritic(patient: Beds) = withContext(Dispatchers.IO) {
         patientCriticDao.insertPatientCritic(
             PatientsCriticEntity(
                 id = patient.id,
@@ -38,7 +38,7 @@ class BedsRepository(private val bedsService: BedsService, private val patientCr
         )
     }
 
-    suspend fun deletePatientCritic(patient: Patients) = withContext(Dispatchers.IO) {
+    suspend fun deletePatientCritic(patient: Beds) = withContext(Dispatchers.IO) {
         patientCriticDao.deletePatientCritic(
             PatientsCriticEntity(
                 id = patient.id,

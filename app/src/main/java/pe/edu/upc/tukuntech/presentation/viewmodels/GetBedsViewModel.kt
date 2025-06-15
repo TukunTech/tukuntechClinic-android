@@ -6,11 +6,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import pe.edu.upc.tukuntech.data.repository.BedsRepository
-import pe.edu.upc.tukuntech.domain.models.Patients
+import pe.edu.upc.tukuntech.domain.models.Beds
 
 class GetBedsViewModel(private val bedsRepository: BedsRepository) : ViewModel() {
-    private val _beds = MutableStateFlow<List<Patients>>(emptyList())
-    val beds: StateFlow<List<Patients>> = _beds
+    private val _beds = MutableStateFlow<List<Beds>>(emptyList())
+    val beds: StateFlow<List<Beds>> = _beds
 
     init {
         getBeds()
@@ -22,15 +22,15 @@ class GetBedsViewModel(private val bedsRepository: BedsRepository) : ViewModel()
         }
     }
 
-    fun insertPatientCritic(patients: Patients){
+    fun insertPatientCritic(beds: Beds){
         viewModelScope.launch {
-            bedsRepository.insertPatientCritic(patients)
+            bedsRepository.insertPatientCritic(beds)
         }
     }
 
-    fun deletePatientCritic(patients: Patients) {
+    fun deletePatientCritic(beds: Beds) {
         viewModelScope.launch {
-            bedsRepository.deletePatientCritic(patients)
+            bedsRepository.deletePatientCritic(beds)
         }
     }
 

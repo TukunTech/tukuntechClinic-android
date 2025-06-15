@@ -29,18 +29,13 @@ import pe.edu.upc.tukuntech.R
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.tooling.preview.Preview
-import pe.edu.upc.tukuntech.domain.models.Patient
-import pe.edu.upc.tukuntech.domain.models.Patients
-import pe.edu.upc.tukuntech.presentation.sampledata.samplePatients
+import pe.edu.upc.tukuntech.domain.models.Beds
 import pe.edu.upc.tukuntech.presentation.viewmodels.GetBedsViewModel
 import androidx.compose.material3.Icon
 
@@ -95,7 +90,7 @@ fun PostOperativeView(viewModel: GetBedsViewModel) {
 
 @Composable
 fun PatientCard(
-    patient: Patients,
+    patient: Beds,
     onCriticalStatusChange: (Boolean) -> Unit ={}
     ) {
     val isCritical = remember {
