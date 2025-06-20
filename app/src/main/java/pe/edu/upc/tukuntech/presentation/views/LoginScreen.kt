@@ -21,13 +21,22 @@ import pe.edu.upc.tukuntech.presentation.di.PresentationModule
 @Composable
 fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
 
-    val username = remember { mutableStateOf("") }
-    val password = remember { mutableStateOf("") }
+    val email = remember{
+        mutableStateOf("")
+    }
+
+    val password = remember{
+        mutableStateOf("")
+    }
 
     val viewModel = remember { PresentationModule.getAuthViewModel() }
     val loginResult = viewModel.loginResult.collectAsState()
 
-    Box(modifier = modifier.fillMaxSize()) {
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+    ){
 
         Image(
             painter = painterResource(id = R.drawable.login_screen),
@@ -50,9 +59,11 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
             modifier = modifier
                 .align(Alignment.TopCenter)
                 .padding(120.dp)
-        ) {
+
+        ){
             Text("Log in", color = Color.White, fontSize = 25.sp)
         }
+
 
         Column(
             modifier = Modifier
@@ -64,36 +75,47 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
                 .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+            Row (
+                horizontalArrangement = Arrangement.spacedBy(8.dp,  Alignment.CenterHorizontally),
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = {}) {
+                IconButton(
+                    onClick = {}
+                ) {
                     Icon(
                         painter = painterResource(id = R.drawable.google),
                         contentDescription = "Google",
                         tint = Color.Unspecified,
                         modifier = Modifier.size(36.dp)
                     )
+
                 }
-                IconButton(onClick = {}) {
+
+                IconButton(
+                    onClick = {}
+                ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ios),
-                        contentDescription = "iOS",
+                        contentDescription = "Google",
                         tint = Color.Unspecified,
                         modifier = Modifier.size(36.dp)
                     )
+
                 }
-                IconButton(onClick = {}) {
+
+                IconButton(
+                    onClick = {}
+                ) {
                     Icon(
                         painter = painterResource(id = R.drawable.facebook),
-                        contentDescription = "Facebook",
+                        contentDescription = "Google",
                         tint = Color.Unspecified,
                         modifier = Modifier.size(36.dp)
                     )
+
                 }
+
             }
 
             val selectedOption = remember { mutableStateOf("Clinic") }
@@ -108,6 +130,7 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
             ) {
                 listOf("Clinic", "Elder").forEach { option ->
                     val isSelected = selectedOption.value == option
+
                     Button(
                         onClick = { selectedOption.value = option },
                         shape = RoundedCornerShape(50),
@@ -126,17 +149,25 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
             }
 
             OutlinedTextField(
-                label = { Text("Username") },
-                value = username.value,
-                onValueChange = { username.value = it }
+                label = {
+                    Text("Email")
+                },
+                value = email.value,
+                onValueChange = {
+                    email.value = it
+                }
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
             OutlinedTextField(
-                label = { Text("Password") },
+                label = {
+                    Text("Password")
+                },
                 value = password.value,
-                onValueChange = { password.value = it }
+                onValueChange = {
+                    password.value = it
+                }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -144,9 +175,11 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
             Button(
                 modifier = Modifier.size(150.dp, 40.dp),
                 onClick = {
-                    viewModel.login(username.value, password.value)
+                    viewModel.login(email.value, password.value)
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0c95a2))
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF0c95a2)
+                )
             ) {
                 Text("Log In")
             }
@@ -162,6 +195,9 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
                 }
             }
 
+
+
+            //dddd
             Spacer(modifier = Modifier.height(16.dp))
 
             Text("I forgot my password")
@@ -176,12 +212,20 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
 
             Spacer(modifier = Modifier.height(16.dp))
             Button(
-                onClick = { navController.navigate("create_account") },
+                onClick = {
+                    navController.navigate("create_account")
+                },
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0FA596))
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF0FA596)
+                )
+
             ) {
                 Text("Create an account")
             }
+
         }
+
     }
+
 }
