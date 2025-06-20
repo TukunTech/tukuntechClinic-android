@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
@@ -22,11 +23,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import pe.edu.upc.tukuntech.presentation.di.PresentationModule
 import pe.edu.upc.tukuntech.presentation.views.ClinicHomeView
 import pe.edu.upc.tukuntech.presentation.views.CreateAccountScreen
 import pe.edu.upc.tukuntech.presentation.views.ICUView
+import pe.edu.upc.tukuntech.presentation.views.PatientRegistrationView
 import pe.edu.upc.tukuntech.presentation.views.LoginScreen
+import pe.edu.upc.tukuntech.presentation.views.PatientListView
 import pe.edu.upc.tukuntech.presentation.views.PostOperativeView
+@Preview
 
 
 @Preview
@@ -47,8 +52,8 @@ fun Home() {
             route = "post_operative"
         ),
         NavigationItem(
-            icon = Icons.Default.FavoriteBorder,
-            title = "UCI",
+            icon = Icons.Default.Warning,
+            title = "Critical Patients",
             route = "uci"
         ),
         NavigationItem(
@@ -64,6 +69,8 @@ fun Home() {
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val getBedsViewModel = PresentationModule.getBedsViewModel()
+    val getCriticalPatientsListViewModel = PresentationModule.getCriticalPatientsViewModel()
 
     Scaffold(
         bottomBar = {
@@ -97,14 +104,16 @@ fun Home() {
 
             }
             composable("post_operative") {
-                PostOperativeView()
+                PostOperativeView(getBedsViewModel)
 
             }
             composable("uci") {
-                ICUView()
+                ICUView(getCriticalPatientsListViewModel)
 
             }
+
             composable("patients") {
+                PatientListView(navController)
 
             }
             composable("login") {
@@ -113,6 +122,11 @@ fun Home() {
             composable("create_account"){
                 CreateAccountScreen(navController)
             }
+
+            composable("patientRegistration") {
+                PatientRegistrationView(navController)
+            }
+
 
 
         }
