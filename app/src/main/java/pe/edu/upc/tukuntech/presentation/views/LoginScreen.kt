@@ -21,6 +21,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -35,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import pe.edu.upc.tukuntech.R
+import pe.edu.upc.tukuntech.presentation.di.PresentationModule
 
 
 @Composable
@@ -48,7 +51,11 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
         mutableStateOf("")
     }
 
-   Box(
+    val viewModel = remember { PresentationModule.getAuthViewModel() }
+    val loginResult = viewModel.loginResult.collectAsState()
+
+
+    Box(
        modifier = modifier
            .fillMaxSize()
    ){
@@ -188,20 +195,31 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
            Spacer(modifier = Modifier.height(24.dp))
 
            Button(
-               modifier = Modifier
-                   .size(150.dp, 40.dp),
+               modifier = Modifier.size(150.dp, 40.dp),
                onClick = {
-                   navController.navigate("home")
+                   viewModel.login(email.value, password.value)
                },
                colors = ButtonDefaults.buttonColors(
-                 containerColor = Color(0xFF0c95a2)
+                   containerColor = Color(0xFF0c95a2)
                )
-
-
            ) {
                Text("Log In")
            }
 
+           LaunchedEffect(loginResult.value) {
+               loginResult.value?.onSuccess { token ->
+                   println("✅ Login OK. Token: $token")
+                   navController.navigate("home") {
+                       popUpTo("login") { inclusive = true }
+                   }
+               }?.onFailure { error ->
+                   println("Login fallido: ${error.message}")
+               }
+           }
+
+
+
+           //dddd
            Spacer(modifier = Modifier.height(16.dp))
 
            Text("I forgot my password")
