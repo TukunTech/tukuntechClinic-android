@@ -70,6 +70,7 @@ fun Home() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val getBedsViewModel = PresentationModule.getBedsViewModel()
+    val getPatientViewModel = PresentationModule.getBedsViewModel()
     val getCriticalPatientsListViewModel = PresentationModule.getCriticalPatientsViewModel()
 
     Scaffold(
@@ -113,7 +114,7 @@ fun Home() {
             }
 
             composable("patients") {
-                PatientListView(navController)
+                PatientListView(navController = navController, viewModel = getPatientViewModel)
 
             }
             composable("login") {
