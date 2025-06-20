@@ -2,80 +2,38 @@ package pe.edu.upc.tukuntech.presentation.views
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import pe.edu.upc.tukuntech.R
-
-
+import pe.edu.upc.tukuntech.presentation.di.PresentationModule
 
 @Composable
 fun CreateAccountScreen(
     navController: NavController,
     modifier: Modifier = Modifier
+) {
+    val companyName = remember { mutableStateOf("") }
+    val ruc = remember { mutableStateOf("") }
+    val email = remember { mutableStateOf("") }
+    val companyPhone = remember { mutableStateOf("") }
+    val city = remember { mutableStateOf("") }
+    val password = remember { mutableStateOf("") }
 
-)
-{
+    val viewModel = remember { PresentationModule.getAuthViewModel() }
+    val registerResult = viewModel.registerResult.collectAsState()
 
-    val companyName = remember{
-        mutableStateOf("")
-    }
-
-    val ruc = remember{
-        mutableStateOf("")
-    }
-
-    val email = remember{
-        mutableStateOf("")
-    }
-
-    val companyPhone = remember{
-        mutableStateOf("")
-    }
-
-    val city = remember{
-        mutableStateOf("")
-    }
-
-    val password = remember{
-        mutableStateOf("")
-    }
-
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-
-
-    ){
+    Box(modifier = modifier.fillMaxSize()) {
 
         Image(
             painter = painterResource(id = R.drawable.login_screen),
@@ -98,8 +56,7 @@ fun CreateAccountScreen(
             modifier = modifier
                 .align(Alignment.TopCenter)
                 .padding(70.dp, 120.dp)
-
-        ){
+        ) {
             Text("Create an account", color = Color.White, fontSize = 25.sp)
         }
 
@@ -107,16 +64,13 @@ fun CreateAccountScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 22.dp)
-                .padding(top = 160.dp) // Puedes ajustar según el diseño
+                .padding(top = 160.dp)
                 .clip(RoundedCornerShape(32.dp))
                 .background(Color.White.copy(alpha = 0.9f))
                 .padding(40.dp)
                 .align(Alignment.TopCenter),
             horizontalAlignment = Alignment.CenterHorizontally
-        )
-
-        {
-
+        ) {
             val selectedOption = remember { mutableStateOf("Clinic") }
 
             Row(
@@ -124,9 +78,9 @@ fun CreateAccountScreen(
                     .clip(RoundedCornerShape(50))
                     .background(Color(0xFFE0F7F9))
                     .padding(2.dp)
-                    .width(260.dp)  // Ancho fijo que ajusta el toggle a tamaño similar a la imagen
+                    .width(260.dp)
                     .height(40.dp),
-                horizontalArrangement = Arrangement.Center, // Centrar los botones
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 listOf("Clinic", "Elder").forEach { option ->
@@ -151,99 +105,84 @@ fun CreateAccountScreen(
                 }
             }
 
-
+            Spacer(modifier = Modifier.height(4.dp))
 
             OutlinedTextField(
-                label = {
-                    Text("Company name")
-                },
+                label = { Text("Company name") },
                 value = companyName.value,
-                onValueChange = {
-                    companyName.value = it
-                }
+                onValueChange = { companyName.value = it }
             )
 
             Spacer(modifier = Modifier.height(2.dp))
 
             OutlinedTextField(
-                label = {
-                    Text("RUC")
-                },
+                label = { Text("RUC") },
                 value = ruc.value,
-                onValueChange = {
-                    ruc.value = it
-                }
+                onValueChange = { ruc.value = it }
             )
 
             Spacer(modifier = Modifier.height(2.dp))
 
             OutlinedTextField(
-                label = {
-                    Text("Email")
-                },
+                label = { Text("Email") },
                 value = email.value,
-                onValueChange = {
-                    email.value = it
-                }
+                onValueChange = { email.value = it }
             )
 
             Spacer(modifier = Modifier.height(2.dp))
 
-
-
             OutlinedTextField(
-                label = {
-                    Text("Company Phone Number")
-                },
+                label = { Text("Company Phone Number") },
                 value = companyPhone.value,
-                onValueChange = {
-                    companyPhone.value = it
-                }
+                onValueChange = { companyPhone.value = it }
             )
 
             Spacer(modifier = Modifier.height(2.dp))
 
             OutlinedTextField(
-                label = {
-                    Text("City")
-                },
+                label = { Text("City") },
                 value = city.value,
-                onValueChange = {
-                    city.value = it
-                }
+                onValueChange = { city.value = it }
             )
 
             Spacer(modifier = Modifier.height(2.dp))
 
             OutlinedTextField(
-                label = {
-                    Text("Password")
-                },
+                label = { Text("Password") },
                 value = password.value,
-                onValueChange = {
-                    password.value = it
-                }
+                onValueChange = { password.value = it }
             )
 
             Spacer(modifier = Modifier.height(10.dp))
 
             Button(
-                modifier = Modifier
-                    .size(150.dp, 40.dp),
+                modifier = Modifier.size(150.dp, 40.dp),
                 onClick = {
-                    navController.navigate("login")
+                    viewModel.register(
+                        username = email.value,
+                        password = password.value,
+                        email = email.value,
+                        firstName = companyName.value,
+                        lastName = city.value
+                    )
                 },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF0c95a2)
-                )
-
-
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0c95a2))
             ) {
                 Text("Create")
             }
 
-            Spacer(modifier = Modifier.height(2.dp))
+            LaunchedEffect(registerResult.value) {
+                registerResult.value?.onSuccess {
+                    println("✅ Registro exitoso")
+                    navController.navigate("login") {
+                        popUpTo("create_account") { inclusive = true }
+                    }
+                }?.onFailure {
+                    println(" Registro fallido: ${it.message}")
+                }
+            }
 
+            Spacer(modifier = Modifier.height(8.dp))
 
             HorizontalDivider(
                 color = Color.Black,
@@ -253,21 +192,13 @@ fun CreateAccountScreen(
 
             Text("Already have an account")
 
-
             Button(
-                onClick = {
-                navController.navigate("login")
-                },
+                onClick = { navController.navigate("login") },
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF0FA596)
-                )
-
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0FA596))
             ) {
                 Text("Login")
             }
-
         }
-
     }
 }
