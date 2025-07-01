@@ -2,6 +2,7 @@ package pe.edu.upc.tukuntech.domain.models
 
 data class Beds(
     val id: Int,
+    val patientId: Int,
     val name: String,
     val lastName: String,
     val hr: String,
