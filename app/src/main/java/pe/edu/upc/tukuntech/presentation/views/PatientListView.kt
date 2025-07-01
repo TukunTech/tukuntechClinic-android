@@ -1,27 +1,15 @@
 package pe.edu.upc.tukuntech.presentation.views
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,11 +20,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import pe.edu.upc.tukuntech.R
-import pe.edu.upc.tukuntech.presentation.viewmodels.GetBedsViewModel
+import pe.edu.upc.tukuntech.presentation.viewmodels.PatientListViewModel
 
 @Composable
-fun PatientListView(navController: NavController, viewModel: GetBedsViewModel) {
-    val beds = viewModel.beds.collectAsState()
+fun PatientListView(navController: NavController, viewModel: PatientListViewModel) {
+    val patients by viewModel.patientWithBeds.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadPatients()
+    }
 
     Column(
         modifier = Modifier
@@ -50,7 +43,7 @@ fun PatientListView(navController: NavController, viewModel: GetBedsViewModel) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            androidx.compose.foundation.Image(
+            Image(
                 painter = painterResource(id = R.drawable.tukuntech),
                 contentDescription = "Logo",
                 modifier = Modifier.size(48.dp)
@@ -110,11 +103,29 @@ fun PatientListView(navController: NavController, viewModel: GetBedsViewModel) {
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // List of Patients
-        LazyColumn {
-            items(beds.value) { bed ->
-                PatientRow(name = "${bed.name} ${bed.lastName}", bedId = bed.id.toString())
-                Spacer(modifier = Modifier.height(10.dp))
+        // Loader or Patient List
+        if (isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 100.dp),
+                contentAlignment = Alignment.TopCenter
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    CircularProgressIndicator(color = Color(0xFF0091AC))
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("Loading patients...", color = Color(0xFF0091AC))
+                }
+            }
+        } else {
+            LazyColumn {
+                items(patients) { patient ->
+                    PatientRow(
+                        name = patient.fullName,
+                        bedId = patient.bedName
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                }
             }
         }
 
@@ -142,7 +153,7 @@ fun PatientListView(navController: NavController, viewModel: GetBedsViewModel) {
 }
 
 @Composable
-fun PatientRow(name: String, bedId: String) {
+fun PatientRow(name: String, bedId: String?) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
@@ -163,10 +174,10 @@ fun PatientRow(name: String, bedId: String) {
                 color = Color.Black
             )
             Text(
-                text = "Bed $bedId",
+                text = bedId ?: "Unassigned",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal,
-                color = Color.Black
+                color = if (bedId == null) Color.Red else Color(0xFF004F72)
             )
         }
     }
