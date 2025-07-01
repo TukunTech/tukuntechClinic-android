@@ -57,6 +57,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+    implementation("androidx.compose.material:material-icons-extended")
+
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.navigation.compose)
