@@ -18,6 +18,7 @@ data class BedsResponse(
     fun toBeds() : Beds{
         return Beds(
             id = id?: 0,
+            patientId = patient?.id ?: -1,
             name = patient?.name ?: "",
             lastName = patient?.lastName ?: "",
             hr = hr?.toString() ?: "",
