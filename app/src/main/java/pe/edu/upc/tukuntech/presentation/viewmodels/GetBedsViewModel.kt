@@ -12,13 +12,18 @@ class GetBedsViewModel(private val bedsRepository: BedsRepository) : ViewModel()
     private val _beds = MutableStateFlow<List<Beds>>(emptyList())
     val beds: StateFlow<List<Beds>> = _beds
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
     init {
         getBeds()
     }
 
     fun getBeds() {
         viewModelScope.launch {
+            _isLoading.value = true
             _beds.value = bedsRepository.getBeds()
+            _isLoading.value = false
         }
     }
 
@@ -33,5 +38,4 @@ class GetBedsViewModel(private val bedsRepository: BedsRepository) : ViewModel()
             bedsRepository.deletePatientCritic(beds)
         }
     }
-
 }
