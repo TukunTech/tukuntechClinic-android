@@ -4,6 +4,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -12,6 +15,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -21,23 +28,16 @@ import pe.edu.upc.tukuntech.presentation.di.PresentationModule
 @Composable
 fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
 
-    val email = remember{
-        mutableStateOf("")
-    }
-
-    val password = remember{
-        mutableStateOf("")
-    }
+    val email = remember { mutableStateOf("") }
+    val password = remember { mutableStateOf("") }
+    val showPassword = remember { mutableStateOf(false) }
 
     val viewModel = remember { PresentationModule.getAuthViewModel() }
     val loginResult = viewModel.loginResult.collectAsState()
 
-
     Box(
-        modifier = modifier
-            .fillMaxSize()
-    ){
-
+        modifier = modifier.fillMaxSize()
+    ) {
         Image(
             painter = painterResource(id = R.drawable.login_screen),
             contentDescription = null,
@@ -59,11 +59,9 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
             modifier = modifier
                 .align(Alignment.TopCenter)
                 .padding(120.dp)
-
-        ){
+        ) {
             Text("Log in", color = Color.White, fontSize = 25.sp)
         }
-
 
         Column(
             modifier = Modifier
@@ -75,47 +73,21 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
                 .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row (
-                horizontalArrangement = Arrangement.spacedBy(8.dp,  Alignment.CenterHorizontally),
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(
-                    onClick = {}
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.google),
-                        contentDescription = "Google",
-                        tint = Color.Unspecified,
-                        modifier = Modifier.size(36.dp)
-                    )
-
+                listOf(R.drawable.google, R.drawable.ios, R.drawable.facebook).forEach { iconRes ->
+                    IconButton(onClick = {}) {
+                        Icon(
+                            painter = painterResource(id = iconRes),
+                            contentDescription = null,
+                            tint = Color.Unspecified,
+                            modifier = Modifier.size(36.dp)
+                        )
+                    }
                 }
-
-                IconButton(
-                    onClick = {}
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ios),
-                        contentDescription = "Google",
-                        tint = Color.Unspecified,
-                        modifier = Modifier.size(36.dp)
-                    )
-
-                }
-
-                IconButton(
-                    onClick = {}
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.facebook),
-                        contentDescription = "Google",
-                        tint = Color.Unspecified,
-                        modifier = Modifier.size(36.dp)
-                    )
-
-                }
-
             }
 
             val selectedOption = remember { mutableStateOf("Clinic") }
@@ -130,7 +102,6 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
             ) {
                 listOf("Clinic", "Elder").forEach { option ->
                     val isSelected = selectedOption.value == option
-
                     Button(
                         onClick = { selectedOption.value = option },
                         shape = RoundedCornerShape(50),
@@ -149,25 +120,37 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
             }
 
             OutlinedTextField(
-                label = {
-                    Text("Email")
-                },
+                label = { Text("Email") },
                 value = email.value,
                 onValueChange = {
                     email.value = it
-                }
+                },
+                isError = loginResult.value?.isFailure == true,
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(12.dp))
 
             OutlinedTextField(
-                label = {
-                    Text("Password")
-                },
+                label = { Text("Password") },
                 value = password.value,
                 onValueChange = {
                     password.value = it
-                }
+                },
+                visualTransformation = if (showPassword.value) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    val icon = if (showPassword.value) Icons.Filled.VisibilityOff else Icons.Filled.Visibility
+                    IconButton(onClick = {
+                        showPassword.value = !showPassword.value
+                    }) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = "Toggle password visibility"
+                        )
+                    }
+                },
+                isError = loginResult.value?.isFailure == true,
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -184,6 +167,16 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
                 Text("Log In")
             }
 
+            if (loginResult.value?.isFailure == true) {
+                Text(
+                    text = "Incorrect username or password",
+                    color = Color.Red,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
+
             LaunchedEffect(loginResult.value) {
                 loginResult.value?.onSuccess { token ->
                     println("✅ Login OK. Token: $token")
@@ -195,11 +188,7 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
                 }
             }
 
-
-
-            //dddd
             Spacer(modifier = Modifier.height(16.dp))
-
             Text("I forgot my password")
 
             HorizontalDivider(
@@ -219,13 +208,9 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFF0FA596)
                 )
-
             ) {
                 Text("Create an account")
             }
-
         }
-
     }
-
 }
