@@ -33,9 +33,15 @@ class PatientListViewModel(
                 PatientWithBed(
                     id = patient.id,
                     fullName = "${patient.name} ${patient.lastName}",
-                    bedName = assignedBed?.let { "Bed ${it.id + 1}" }
+                    bedName = assignedBed?.let { "Bed ${it.id + 1}" },
+                    dni = patient.dni,
+                    age = patient.age,
+                    gender = patient.gender.gender,
+                    bloodType = patient.bloodType.type,
+                    nationality = patient.nationality.nationality
                 )
             }
+
 
             _patientWithBeds.value = result
             _isLoading.value = false
