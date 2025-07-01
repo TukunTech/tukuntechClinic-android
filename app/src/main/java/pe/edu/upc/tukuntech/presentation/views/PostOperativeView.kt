@@ -103,7 +103,8 @@ fun PatientCard(
                 Text(
                     text = "Bed ${patient.id} - ${patient.name} ${patient.lastName}",
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
                 )
                 IconButton(
                     onClick = {
