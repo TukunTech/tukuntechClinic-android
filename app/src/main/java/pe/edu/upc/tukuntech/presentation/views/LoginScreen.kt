@@ -89,35 +89,26 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
                     }
                 }
             }
-
-            val selectedOption = remember { mutableStateOf("Clinic") }
-
-            Row(
+            Box(
                 modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
                     .clip(RoundedCornerShape(50))
                     .background(Color(0xFFE0F7F9))
-                    .padding(2.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .padding(vertical = 10.dp),
+                contentAlignment = Alignment.Center
             ) {
-                listOf("Clinic", "Elder").forEach { option ->
-                    val isSelected = selectedOption.value == option
-                    Button(
-                        onClick = { selectedOption.value = option },
-                        shape = RoundedCornerShape(50),
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(40.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isSelected) Color(0xFF5BB9BA) else Color.Transparent,
-                            contentColor = if (isSelected) Color.White else Color(0xFF5BB9BA)
-                        ),
-                        elevation = null
-                    ) {
-                        Text(text = option)
-                    }
-                }
+                Text(
+                    text = "CLINIC",
+                    fontSize = 18.sp,
+                    color = Color(0xFF0c95a2),
+                    fontWeight = FontWeight.Bold
+                )
             }
+
+
+
+
 
             OutlinedTextField(
                 label = { Text("Email") },
