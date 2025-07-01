@@ -1,6 +1,6 @@
 package pe.edu.upc.tukuntech.presentation.views
 
-import android.R.attr.background
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,11 +22,12 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,34 +35,55 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import pe.edu.upc.tukuntech.R
+import pe.edu.upc.tukuntech.data.models.Allergy
+import pe.edu.upc.tukuntech.data.models.BloodType
+import pe.edu.upc.tukuntech.data.models.Gender
+import pe.edu.upc.tukuntech.data.models.MedicalInsurance
+import pe.edu.upc.tukuntech.data.models.Nationality
+import pe.edu.upc.tukuntech.data.models.PatientEntity
+import pe.edu.upc.tukuntech.presentation.di.PresentationModule
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PatientRegistrationView(navController: NavController) {
     val scrollState = rememberScrollState()
     val inputBackground = Color(0xFFD8E8EA)
+    val context = LocalContext.current
 
     var name by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var dni by remember { mutableStateOf("") }
-    var gender by remember { mutableStateOf("") }
     var age by remember { mutableStateOf("") }
-    var bloodType by remember { mutableStateOf("") }
-    var nationality by remember { mutableStateOf("") }
-    var policies by remember { mutableStateOf("") }
     var insurance by remember { mutableStateOf("") }
     var allergies by remember { mutableStateOf("") }
 
-    val genders = listOf("Male", "Female")
-    var expanded by remember { mutableStateOf(false) }
+    val viewModel = remember { PresentationModule.getPatientRegistrationViewModel() }
+    val registrationResult = viewModel.registrationResult.collectAsState()
+
+    val utilViewModel = remember { PresentationModule.getUtilViewModel() }
+
+    val genders by utilViewModel.genders.collectAsState()
+    val bloodTypes by utilViewModel.bloodTypes.collectAsState()
+    val nationalities by utilViewModel.nationalities.collectAsState()
+
+
+
+    var selectedGender by remember { mutableStateOf<Gender?>(null) }
+    var selectedBloodType by remember { mutableStateOf<BloodType?>(null) }
+    var selectedNationality by remember { mutableStateOf<Nationality?>(null) }
+    var selectedInsurance by remember { mutableStateOf<MedicalInsurance?>(null) }
+    var selectedAllergy by remember { mutableStateOf<Allergy?>(null) }
+
+    LaunchedEffect(Unit) {
+        utilViewModel.loadAllUtilData()
+    }
 
     Column(
         modifier = Modifier
@@ -89,55 +111,108 @@ fun PatientRegistrationView(navController: NavController) {
         CustomInputField("Name", name, inputBackground) { name = it }
         CustomInputField("Last Name", lastName, inputBackground) { lastName = it }
         CustomInputField("DNI", dni, inputBackground) { dni = it }
-
-        // Gender dropdown
-        ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = !expanded }) {
-            TextField(
-                value = gender,
-                onValueChange = {},
-                readOnly = true,
-                label = { Text("Gender") },
-                trailingIcon = { Icon(Icons.Filled.ArrowDropDown, contentDescription = null) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .menuAnchor(),
-                shape = RoundedCornerShape(8.dp),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = inputBackground,
-                    unfocusedContainerColor = inputBackground,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                )
-            )
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                genders.forEach { selectionOption ->
-                    DropdownMenuItem(
-                        text = { Text(selectionOption) },
-                        onClick = {
-                            gender = selectionOption
-                            expanded = false
-                        }
-                    )
-                }
-            }
-        }
-
         CustomInputField("Age", age, inputBackground) { age = it }
-        CustomInputField("Blood Type", bloodType, inputBackground) { bloodType = it }
-        CustomInputField("Nationality", nationality, inputBackground) { nationality = it }
-        CustomInputField("No. of Policies", policies, inputBackground) { policies = it }
-        CustomInputField("Insurance", insurance, inputBackground) { insurance = it }
-        CustomInputField("Allergies", allergies, inputBackground) { allergies = it }
+
+        DropdownSelector(
+            label = "Gender",
+            selectedOption = selectedGender?.gender ?: "",
+            options = genders.map { it.gender },
+            onSelect = { selectedGender = genders[it] }
+        )
+
+        DropdownSelector(
+            label = "Blood Type",
+            selectedOption = selectedBloodType?.type ?: "",
+            options = bloodTypes.map { it.type },
+            onSelect = { selectedBloodType = bloodTypes[it] }
+        )
+
+        DropdownSelector(
+            label = "Nationality",
+            selectedOption = selectedNationality?.nationality ?: "",
+            options = nationalities.map { it.nationality },
+            onSelect = { selectedNationality = nationalities[it] }
+        )
+
+        CustomInputField(
+            label = "Medical Insurance",
+            value = insurance,
+            backgroundColor = inputBackground
+        ) { insurance = it }
+
+
+        CustomInputField(
+            label = "Allergies",
+            value = allergies,
+            backgroundColor = inputBackground
+        ) { allergies = it }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
             onClick = {
-                // Aquí navegas de regreso a la pantalla anterior (lista pacientes)
-                navController.popBackStack()
+                val ageInt = age.toIntOrNull()
+
+                when {
+                    name.isBlank() -> {
+                        Toast.makeText(context, "El campo 'Name' es obligatorio", Toast.LENGTH_SHORT).show()
+                        return@Button
+                    }
+
+                    lastName.isBlank() -> {
+                        Toast.makeText(context, "El campo 'Last Name' es obligatorio", Toast.LENGTH_SHORT).show()
+                        return@Button
+                    }
+
+                    dni.isBlank() -> {
+                        Toast.makeText(context, "El campo 'DNI' es obligatorio", Toast.LENGTH_SHORT).show()
+                        return@Button
+                    }
+
+                    dni.length != 8 -> {
+                        Toast.makeText(context, "El DNI debe tener exactamente 8 dígitos", Toast.LENGTH_SHORT).show()
+                        return@Button
+                    }
+
+                    age.isBlank() -> {
+                        Toast.makeText(context, "El campo 'Age' es obligatorio", Toast.LENGTH_SHORT).show()
+                        return@Button
+                    }
+
+                    ageInt == null || ageInt <= 0 -> {
+                        Toast.makeText(context, "La edad debe ser un número válido mayor a 0", Toast.LENGTH_SHORT).show()
+                        return@Button
+                    }
+
+                    selectedGender == null -> {
+                        Toast.makeText(context, "Debes seleccionar un género", Toast.LENGTH_SHORT).show()
+                        return@Button
+                    }
+
+                    selectedBloodType == null -> {
+                        Toast.makeText(context, "Debes seleccionar un tipo de sangre", Toast.LENGTH_SHORT).show()
+                        return@Button
+                    }
+
+                    selectedNationality == null -> {
+                        Toast.makeText(context, "Debes seleccionar una nacionalidad", Toast.LENGTH_SHORT).show()
+                        return@Button
+                    }
+                }
+
+                val patient = PatientEntity(
+                    id = 0,
+                    name = name,
+                    lastName = lastName,
+                    dni = dni,
+                    age = ageInt!!,
+                    gender = selectedGender ?: Gender(0, ""),
+                    bloodType = selectedBloodType ?: BloodType(0, ""),
+                    nationality = selectedNationality ?: Nationality(0, ""),
+                    medicalInsurance = selectedInsurance,
+                    allergy = selectedAllergy
+                )
+                viewModel.registerPatient(patient)
             },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(50),
@@ -145,8 +220,23 @@ fun PatientRegistrationView(navController: NavController) {
         ) {
             Text("Save", color = Color.White)
         }
+
+        registrationResult.value?.let {
+            if (it.isSuccess) {
+                Text("✅ Paciente registrado correctamente", color = Color.Green)
+            } else {
+                Text("❌ Error al registrar: ${it.exceptionOrNull()?.message}", color = Color.Red)
+            }
+        }
+
+        LaunchedEffect(registrationResult.value) {
+            registrationResult.value?.onSuccess {
+                navController.popBackStack()
+            }
+        }
     }
 }
+
 @Composable
 fun CustomInputField(
     label: String,
@@ -169,4 +259,53 @@ fun CustomInputField(
             unfocusedIndicatorColor = Color.Transparent
         )
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DropdownSelector(
+    label: String,
+    selectedOption: String,
+    options: List<String>,
+    onSelect: (Int) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded }
+    ) {
+        TextField(
+            value = selectedOption,
+            onValueChange = {},
+            readOnly = true,
+            label = { Text(label) },
+            trailingIcon = { Icon(Icons.Filled.ArrowDropDown, contentDescription = null) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .menuAnchor(),
+            shape = RoundedCornerShape(8.dp),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color(0xFFD8E8EA),
+                unfocusedContainerColor = Color(0xFFD8E8EA),
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            )
+        )
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            options.forEachIndexed { index, option ->
+                DropdownMenuItem(
+                    text = { Text(option) },
+                    onClick = {
+                        onSelect(index)
+                        expanded = false
+                    }
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(12.dp))
+    }
 }
