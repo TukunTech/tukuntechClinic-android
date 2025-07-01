@@ -6,8 +6,11 @@ import pe.edu.upc.tukuntech.presentation.viewmodels.AuthViewModel
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import pe.edu.upc.tukuntech.data.di.DataModule
+import pe.edu.upc.tukuntech.data.remote.PatientService
+import pe.edu.upc.tukuntech.data.repository.PatientRepository
 import pe.edu.upc.tukuntech.presentation.viewmodels.CriticalPatientsListViewModel
 import pe.edu.upc.tukuntech.presentation.viewmodels.GetBedsViewModel
+import pe.edu.upc.tukuntech.presentation.viewmodels.PatientListViewModel
 
 object PresentationModule {
     fun getAuthService(): AuthService {
@@ -25,6 +28,27 @@ object PresentationModule {
     fun getBedsViewModel(): GetBedsViewModel {
         return GetBedsViewModel(DataModule.getBedsRepository())
     }
+
+    fun getPatientService(): PatientService {
+        return Retrofit.Builder()
+            .baseUrl("https://tukun-tech-platform.onrender.com/api/v1/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(PatientService::class.java)
+    }
+
+    fun getPatientListViewModel(): PatientListViewModel {
+        return PatientListViewModel(
+            bedsRepository = DataModule.getBedsRepository(),
+            patientRepository = getPatientRepository()
+        )
+    }
+
+
+    fun getPatientRepository(): PatientRepository {
+        return PatientRepository(getPatientService())
+    }
+
 
     fun getCriticalPatientsViewModel(): CriticalPatientsListViewModel {
         return CriticalPatientsListViewModel(DataModule.getCriticalPatientsRepository())
