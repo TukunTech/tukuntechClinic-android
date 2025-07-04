@@ -2,6 +2,7 @@ package pe.edu.upc.tukuntech.presentation.views
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -50,6 +51,7 @@ import pe.edu.upc.tukuntech.data.models.Nationality
 import pe.edu.upc.tukuntech.data.models.PatientEntity
 import pe.edu.upc.tukuntech.presentation.di.PresentationModule
 
+
 @Composable
 fun PatientRegistrationView(navController: NavController) {
     val scrollState = rememberScrollState()
@@ -68,7 +70,6 @@ fun PatientRegistrationView(navController: NavController) {
     val registrationResult = viewModel.registrationResult.collectAsState()
 
     val utilViewModel = remember { PresentationModule.getUtilViewModel() }
-
     val genders by utilViewModel.genders.collectAsState()
     val bloodTypes by utilViewModel.bloodTypes.collectAsState()
     val nationalities by utilViewModel.nationalities.collectAsState()
@@ -86,6 +87,7 @@ fun PatientRegistrationView(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color.White)
             .padding(16.dp)
             .verticalScroll(scrollState)
     ) {
@@ -102,7 +104,8 @@ fun PatientRegistrationView(navController: NavController) {
             Text(
                 text = "Patient Registration",
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
             )
         }
 
@@ -156,7 +159,6 @@ fun PatientRegistrationView(navController: NavController) {
         Button(
             onClick = {
                 val ageInt = age.toIntOrNull()
-
                 when {
                     name.isBlank() -> {
                         Toast.makeText(context, "El campo 'Name' es obligatorio", Toast.LENGTH_SHORT).show(); return@Button
@@ -236,7 +238,7 @@ fun CustomInputField(
     TextField(
         value = value,
         onValueChange = onValueChange,
-        label = { Text(label) },
+        label = { Text(label, color = Color.Black) },
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 2.dp),
@@ -245,7 +247,11 @@ fun CustomInputField(
             focusedContainerColor = backgroundColor,
             unfocusedContainerColor = backgroundColor,
             focusedIndicatorColor = Color(0xFF00BCD4),
-            unfocusedIndicatorColor = Color.Gray
+            unfocusedIndicatorColor = Color.Gray,
+            focusedLabelColor = Color.Black,
+            unfocusedLabelColor = Color.Black,
+            focusedTextColor = Color.Black,
+            unfocusedTextColor = Color.Black
         )
     )
 }
@@ -269,7 +275,7 @@ fun DropdownSelector(
             value = selectedOption,
             onValueChange = {},
             readOnly = true,
-            label = { Text(label) },
+            label = { Text(label, color = Color.Black) },
             trailingIcon = { Icon(Icons.Filled.ArrowDropDown, contentDescription = null) },
             modifier = Modifier
                 .fillMaxWidth()
@@ -279,7 +285,11 @@ fun DropdownSelector(
                 focusedContainerColor = backgroundColor,
                 unfocusedContainerColor = backgroundColor,
                 focusedIndicatorColor = Color(0xFF00BCD4),
-                unfocusedIndicatorColor = Color.Gray
+                unfocusedIndicatorColor = Color.Gray,
+                focusedLabelColor = Color.Black,
+                unfocusedLabelColor = Color.Black,
+                focusedTextColor = Color.Black,
+                unfocusedTextColor = Color.Black
             )
         )
         ExposedDropdownMenu(
@@ -298,3 +308,4 @@ fun DropdownSelector(
         }
     }
 }
+
