@@ -27,7 +27,6 @@ import pe.edu.upc.tukuntech.presentation.di.PresentationModule
 
 @Composable
 fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
-
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val showPassword = remember { mutableStateOf(false) }
@@ -35,9 +34,7 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
     val viewModel = remember { PresentationModule.getAuthViewModel() }
     val loginResult = viewModel.loginResult.collectAsState()
 
-    Box(
-        modifier = modifier.fillMaxSize()
-    ) {
+    Box(modifier = modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.login_screen),
             contentDescription = null,
@@ -68,7 +65,7 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .padding(22.dp)
                 .clip(RoundedCornerShape(32.dp))
-                .background(Color.White.copy(alpha = 0.9f))
+                .background(Color.White) // Fondo sólido para mayor contraste
                 .padding(40.dp)
                 .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -89,6 +86,7 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
                     }
                 }
             }
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -106,16 +104,11 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
                 )
             }
 
-
-
-
-
             OutlinedTextField(
-                label = { Text("Email") },
+                label = { Text("Email", color = Color.DarkGray) },
                 value = email.value,
-                onValueChange = {
-                    email.value = it
-                },
+                onValueChange = { email.value = it },
+                textStyle = LocalTextStyle.current.copy(color = Color.Black),
                 isError = loginResult.value?.isFailure == true,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -123,11 +116,10 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.height(12.dp))
 
             OutlinedTextField(
-                label = { Text("Password") },
+                label = { Text("Password", color = Color.DarkGray) },
                 value = password.value,
-                onValueChange = {
-                    password.value = it
-                },
+                onValueChange = { password.value = it },
+                textStyle = LocalTextStyle.current.copy(color = Color.Black),
                 visualTransformation = if (showPassword.value) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
                     val icon = if (showPassword.value) Icons.Filled.VisibilityOff else Icons.Filled.Visibility
@@ -136,7 +128,8 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
                     }) {
                         Icon(
                             imageVector = icon,
-                            contentDescription = "Toggle password visibility"
+                            contentDescription = "Toggle password visibility",
+                            tint = Color.DarkGray
                         )
                     }
                 },
@@ -155,7 +148,7 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
                     containerColor = Color(0xFF0c95a2)
                 )
             ) {
-                Text("Log In")
+                Text("Log In", color = Color.White)
             }
 
             if (loginResult.value?.isFailure == true) {
@@ -180,7 +173,7 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-            Text("I forgot my password")
+            Text("I forgot my password", color = Color.Black)
 
             HorizontalDivider(
                 color = Color.Black,
@@ -188,7 +181,7 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
                 modifier = Modifier.padding(vertical = 8.dp)
             )
 
-            Text("Don't have an account?")
+            Text("Don't have an account?", color = Color.Black)
 
             Spacer(modifier = Modifier.height(16.dp))
             Button(
@@ -200,8 +193,9 @@ fun LoginScreen(navController: NavController, modifier: Modifier = Modifier) {
                     containerColor = Color(0xFF0FA596)
                 )
             ) {
-                Text("Create an account")
+                Text("Create an account", color = Color.White)
             }
         }
     }
 }
+
