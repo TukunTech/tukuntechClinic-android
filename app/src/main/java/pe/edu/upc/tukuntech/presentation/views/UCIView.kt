@@ -70,7 +70,9 @@ fun ICUView(viewModel: CriticalPatientsListViewModel) {
                         Text(
                             text = "Critical Patients",
                             fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF004F72)
+
                         )
                     }
 
