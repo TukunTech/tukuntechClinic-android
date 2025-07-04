@@ -55,7 +55,9 @@ fun PostOperativeView(viewModel: GetBedsViewModel) {
                 Text(
                     text = "Postoperative Patients",
                     fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF004F72)
+
                 )
             }
 
@@ -104,7 +106,7 @@ fun PatientCard(
                     text = "Bed ${patient.id} - ${patient.name} ${patient.lastName}",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    color = Color.Black // <--- corregido
                 )
                 IconButton(
                     onClick = {
@@ -142,7 +144,12 @@ fun VitalSign(label: String, value: String, unit: String, color: Color) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = label, fontSize = 14.sp)
+        Text(
+            text = label,
+            fontSize = 14.sp,
+            color = Color.Black,
+            fontWeight = FontWeight.Medium
+        )
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = value,
@@ -151,10 +158,15 @@ fun VitalSign(label: String, value: String, unit: String, color: Color) {
                 color = color
             )
             Spacer(modifier = Modifier.width(4.dp))
-            Text(text = unit, fontSize = 12.sp, color = color)
+            Text(
+                text = unit,
+                fontSize = 12.sp,
+                color = color
+            )
         }
     }
 }
+
 
 @Composable
 fun LoadingScreen() {
