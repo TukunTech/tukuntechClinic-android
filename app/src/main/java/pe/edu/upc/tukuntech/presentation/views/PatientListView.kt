@@ -137,7 +137,6 @@ fun PatientListView(navController: NavController, viewModel: PatientListViewMode
                     Spacer(modifier = Modifier.height(10.dp))
                 }
             }
-
         }
 
         Spacer(modifier = Modifier.weight(1f))
@@ -200,7 +199,8 @@ fun PatientRow(
                 Text(
                     text = name,
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.Black
                 )
                 Row {
                     Text(
@@ -234,7 +234,6 @@ fun PatientRow(
                     PatientDetail(label = "Gender", value = gender)
                 }
             }
-
         }
     }
 }
@@ -253,7 +252,9 @@ fun PatientDetail(label: String, value: String) {
             color = Color(0xFF004F72),
             modifier = Modifier.width(100.dp)
         )
-        Text(text = value)
+        Text(
+            text = value,
+            color = Color.Black // 🔧 Corregido para que siempre se vea bien
+        )
     }
 }
-
