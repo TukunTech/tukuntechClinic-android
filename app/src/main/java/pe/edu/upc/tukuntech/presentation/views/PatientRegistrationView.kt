@@ -50,11 +50,11 @@ import pe.edu.upc.tukuntech.data.models.Nationality
 import pe.edu.upc.tukuntech.data.models.PatientEntity
 import pe.edu.upc.tukuntech.presentation.di.PresentationModule
 
-
 @Composable
 fun PatientRegistrationView(navController: NavController) {
     val scrollState = rememberScrollState()
-    val inputBackground = Color(0xFFD8E8EA)
+    val inputBackground = Color(0xFFF5F5F5)
+    val fieldPadding = 8.dp
     val context = LocalContext.current
 
     var name by remember { mutableStateOf("") }
@@ -72,8 +72,6 @@ fun PatientRegistrationView(navController: NavController) {
     val genders by utilViewModel.genders.collectAsState()
     val bloodTypes by utilViewModel.bloodTypes.collectAsState()
     val nationalities by utilViewModel.nationalities.collectAsState()
-
-
 
     var selectedGender by remember { mutableStateOf<Gender?>(null) }
     var selectedBloodType by remember { mutableStateOf<BloodType?>(null) }
@@ -108,45 +106,51 @@ fun PatientRegistrationView(navController: NavController) {
             )
         }
 
+        Spacer(modifier = Modifier.height(16.dp))
+
         CustomInputField("Name", name, inputBackground) { name = it }
+        Spacer(modifier = Modifier.height(fieldPadding))
+
         CustomInputField("Last Name", lastName, inputBackground) { lastName = it }
+        Spacer(modifier = Modifier.height(fieldPadding))
+
         CustomInputField("DNI", dni, inputBackground) { dni = it }
+        Spacer(modifier = Modifier.height(fieldPadding))
+
         CustomInputField("Age", age, inputBackground) { age = it }
+        Spacer(modifier = Modifier.height(fieldPadding))
 
         DropdownSelector(
             label = "Gender",
             selectedOption = selectedGender?.gender ?: "",
             options = genders.map { it.gender },
-            onSelect = { selectedGender = genders[it] }
+            onSelect = { selectedGender = genders[it] },
+            backgroundColor = inputBackground
         )
+        Spacer(modifier = Modifier.height(fieldPadding))
 
         DropdownSelector(
             label = "Blood Type",
             selectedOption = selectedBloodType?.type ?: "",
             options = bloodTypes.map { it.type },
-            onSelect = { selectedBloodType = bloodTypes[it] }
+            onSelect = { selectedBloodType = bloodTypes[it] },
+            backgroundColor = inputBackground
         )
+        Spacer(modifier = Modifier.height(fieldPadding))
 
         DropdownSelector(
             label = "Nationality",
             selectedOption = selectedNationality?.nationality ?: "",
             options = nationalities.map { it.nationality },
-            onSelect = { selectedNationality = nationalities[it] }
+            onSelect = { selectedNationality = nationalities[it] },
+            backgroundColor = inputBackground
         )
+        Spacer(modifier = Modifier.height(fieldPadding))
 
-        CustomInputField(
-            label = "Medical Insurance",
-            value = insurance,
-            backgroundColor = inputBackground
-        ) { insurance = it }
+        CustomInputField("Medical Insurance", insurance, inputBackground) { insurance = it }
+        Spacer(modifier = Modifier.height(fieldPadding))
 
-
-        CustomInputField(
-            label = "Allergies",
-            value = allergies,
-            backgroundColor = inputBackground
-        ) { allergies = it }
-
+        CustomInputField("Allergies", allergies, inputBackground) { allergies = it }
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
@@ -155,48 +159,31 @@ fun PatientRegistrationView(navController: NavController) {
 
                 when {
                     name.isBlank() -> {
-                        Toast.makeText(context, "El campo 'Name' es obligatorio", Toast.LENGTH_SHORT).show()
-                        return@Button
+                        Toast.makeText(context, "El campo 'Name' es obligatorio", Toast.LENGTH_SHORT).show(); return@Button
                     }
-
                     lastName.isBlank() -> {
-                        Toast.makeText(context, "El campo 'Last Name' es obligatorio", Toast.LENGTH_SHORT).show()
-                        return@Button
+                        Toast.makeText(context, "El campo 'Last Name' es obligatorio", Toast.LENGTH_SHORT).show(); return@Button
                     }
-
                     dni.isBlank() -> {
-                        Toast.makeText(context, "El campo 'DNI' es obligatorio", Toast.LENGTH_SHORT).show()
-                        return@Button
+                        Toast.makeText(context, "El campo 'DNI' es obligatorio", Toast.LENGTH_SHORT).show(); return@Button
                     }
-
                     dni.length != 8 -> {
-                        Toast.makeText(context, "El DNI debe tener exactamente 8 dígitos", Toast.LENGTH_SHORT).show()
-                        return@Button
+                        Toast.makeText(context, "El DNI debe tener exactamente 8 dígitos", Toast.LENGTH_SHORT).show(); return@Button
                     }
-
                     age.isBlank() -> {
-                        Toast.makeText(context, "El campo 'Age' es obligatorio", Toast.LENGTH_SHORT).show()
-                        return@Button
+                        Toast.makeText(context, "El campo 'Age' es obligatorio", Toast.LENGTH_SHORT).show(); return@Button
                     }
-
                     ageInt == null || ageInt <= 0 -> {
-                        Toast.makeText(context, "La edad debe ser un número válido mayor a 0", Toast.LENGTH_SHORT).show()
-                        return@Button
+                        Toast.makeText(context, "La edad debe ser un número válido mayor a 0", Toast.LENGTH_SHORT).show(); return@Button
                     }
-
                     selectedGender == null -> {
-                        Toast.makeText(context, "Debes seleccionar un género", Toast.LENGTH_SHORT).show()
-                        return@Button
+                        Toast.makeText(context, "Debes seleccionar un género", Toast.LENGTH_SHORT).show(); return@Button
                     }
-
                     selectedBloodType == null -> {
-                        Toast.makeText(context, "Debes seleccionar un tipo de sangre", Toast.LENGTH_SHORT).show()
-                        return@Button
+                        Toast.makeText(context, "Debes seleccionar un tipo de sangre", Toast.LENGTH_SHORT).show(); return@Button
                     }
-
                     selectedNationality == null -> {
-                        Toast.makeText(context, "Debes seleccionar una nacionalidad", Toast.LENGTH_SHORT).show()
-                        return@Button
+                        Toast.makeText(context, "Debes seleccionar una nacionalidad", Toast.LENGTH_SHORT).show(); return@Button
                     }
                 }
 
@@ -214,11 +201,13 @@ fun PatientRegistrationView(navController: NavController) {
                 )
                 viewModel.registerPatient(patient)
             },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
             shape = RoundedCornerShape(50),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00BCD4))
         ) {
-            Text("Save", color = Color.White)
+            Text("Save", color = Color.White, modifier = Modifier.padding(vertical = 8.dp))
         }
 
         registrationResult.value?.let {
@@ -250,13 +239,13 @@ fun CustomInputField(
         label = { Text(label) },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(vertical = 2.dp),
         shape = RoundedCornerShape(8.dp),
         colors = TextFieldDefaults.colors(
             focusedContainerColor = backgroundColor,
             unfocusedContainerColor = backgroundColor,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent
+            focusedIndicatorColor = Color(0xFF00BCD4),
+            unfocusedIndicatorColor = Color.Gray
         )
     )
 }
@@ -267,7 +256,8 @@ fun DropdownSelector(
     label: String,
     selectedOption: String,
     options: List<String>,
-    onSelect: (Int) -> Unit
+    onSelect: (Int) -> Unit,
+    backgroundColor: Color
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -286,10 +276,10 @@ fun DropdownSelector(
                 .menuAnchor(),
             shape = RoundedCornerShape(8.dp),
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color(0xFFD8E8EA),
-                unfocusedContainerColor = Color(0xFFD8E8EA),
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
+                focusedContainerColor = backgroundColor,
+                unfocusedContainerColor = backgroundColor,
+                focusedIndicatorColor = Color(0xFF00BCD4),
+                unfocusedIndicatorColor = Color.Gray
             )
         )
         ExposedDropdownMenu(
@@ -306,6 +296,5 @@ fun DropdownSelector(
                 )
             }
         }
-        Spacer(modifier = Modifier.height(12.dp))
     }
 }
